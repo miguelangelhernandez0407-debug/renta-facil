@@ -8,6 +8,7 @@
             <span style="color:white;margin-right:16px">Hola, <?= $_SESSION['nombre'] ?></span>
 
             <?php if ($_SESSION['rol'] === 'administrador'): ?>
+                <a href="/renta-facil/modules/gestion/crear_contrato.php">Contratos</a>
                 <a href="/renta-facil/modules/gestion/panel.php">Propiedades</a>
                 <a href="/renta-facil/modules/gestion/usuarios.php">Usuarios</a>
 
