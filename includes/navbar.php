@@ -8,9 +8,10 @@
             <span style="color:white;margin-right:16px">Hola, <?= $_SESSION['nombre'] ?></span>
 
             <?php if ($_SESSION['rol'] === 'administrador'): ?>
-                <a href="/renta-facil/modules/gestion/crear_contrato.php">Contratos</a>
                 <a href="/renta-facil/modules/gestion/panel.php">Propiedades</a>
                 <a href="/renta-facil/modules/gestion/usuarios.php">Usuarios</a>
+                <a href="/renta-facil/modules/gestion/crear_contrato.php">Contratos</a>
+                <a href="/renta-facil/modules/auth/perfil.php">Mi perfil</a>
 
             <?php elseif ($_SESSION['rol'] === 'arrendador'): ?>
                 <a href="/renta-facil/modules/propiedades/listar.php">Inicio</a>
@@ -18,13 +19,15 @@
                 <a href="/renta-facil/modules/propiedades/crear.php">Publicar</a>
                 <a href="/renta-facil/modules/busqueda/buscar.php">Buscar</a>
                 <a href="/renta-facil/modules/verificacion/verificar.php">Verificacion</a>
+                <a href="/renta-facil/modules/auth/perfil.php">Mi perfil</a>
 
             <?php elseif ($_SESSION['rol'] === 'arrendatario'): ?>
                 <a href="/renta-facil/modules/propiedades/listar.php">Inicio</a>
                 <a href="/renta-facil/modules/busqueda/buscar.php">Buscar</a>
-                <a href="/renta-facil/modules/arrendatarios/validar.php">Mi perfil</a>
+                <a href="/renta-facil/modules/arrendatarios/validar.php">Validacion</a>
                 <a href="/renta-facil/modules/pagos/pagar.php">Pagos</a>
                 <a href="/renta-facil/modules/seguridad/reportar.php">Reportar</a>
+                <a href="/renta-facil/modules/auth/perfil.php">Mi perfil</a>
             <?php endif; ?>
 
             <a href="/renta-facil/modules/auth/cerrar_sesion.php">Cerrar sesion</a>

@@ -57,14 +57,7 @@ $info_actual = mysqli_fetch_assoc(mysqli_query($conexion, "SELECT * FROM anteced
     <link rel="stylesheet" href="../../css/estilos.css">
 </head>
 <body>
-    <nav class="navbar">
-        <h1>Renta Fácil</h1>
-        <div>
-            <a href="../propiedades/listar.php">Inicio</a>
-            <a href="../busqueda/buscar.php">Buscar</a>
-            <a href="../auth/cerrar_sesion.php">Cerrar sesión</a>
-        </div>
-    </nav>
+    <?php include '../../includes/navbar.php'; ?>
 
     <div class="contenedor-form" style="max-width:560px">
         <h2>Validación de arrendatario</h2>

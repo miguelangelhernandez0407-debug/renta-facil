@@ -37,12 +37,21 @@ $resultado = mysqli_query($conexion, $sql);
                 <?php while ($p = mysqli_fetch_assoc($resultado)): ?>
                     <div class="tarjeta">
                         <div class="tarjeta-info">
-                            <h3><?= $p['tipo_propiedad'] ?> en <?= $p['barrio'] ?></h3>
+                            <h3>
+                                <a href="/renta-facil/modules/propiedades/detalle.php?id=<?= $p['id_propiedad'] ?>" 
+                                   style="color:#1a73e8;text-decoration:none">
+                                    <?= ucfirst($p['tipo_propiedad']) ?> en <?= $p['barrio'] ?>
+                                </a>
+                            </h3>
                             <p>📍 <?= $p['ciudad'] ?>, <?= $p['barrio'] ?></p>
                             <p>🛏 <?= $p['habitaciones'] ?> hab. · 🚿 <?= $p['baños'] ?> baños · <?= $p['area_m2'] ?> m²</p>
                             <p><?= $p['descripcion'] ?></p>
                             <p class="precio">$<?= number_format($p['precio_mensual'], 0, ',', '.') ?>/mes</p>
                             <span class="badge verificado">Verificado</span>
+                            <div style="margin-top:10px">
+                                <a href="/renta-facil/modules/propiedades/detalle.php?id=<?= $p['id_propiedad'] ?>" 
+                                   class="btn btn-primary">Ver detalle</a>
+                            </div>
                         </div>
                     </div>
                 <?php endwhile; ?>
