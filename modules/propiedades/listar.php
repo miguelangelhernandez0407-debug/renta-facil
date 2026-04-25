@@ -25,20 +25,7 @@ $resultado = mysqli_query($conexion, $sql);
     <link rel="stylesheet" href="../../css/estilos.css">
 </head>
 <body>
-    <nav class="navbar">
-        <h1>Renta Fácil</h1>
-        <div>
-            <span style="color:white">Hola, <?= $_SESSION['nombre'] ?></span>
-            <?php if ($_SESSION['rol'] === 'administrador'): ?>
-                <a href="../gestion/panel.php">Panel Admin</a>
-            <?php endif; ?>
-            <?php if ($_SESSION['rol'] === 'arrendador'): ?>
-                <a href="../propiedades/crear.php">Publicar propiedad</a>
-            <?php endif; ?>
-            <a href="../busqueda/buscar.php">Buscar</a>
-            <a href="../auth/cerrar_sesion.php">Cerrar sesión</a>
-        </div>
-    </nav>
+    <?php include '../../includes/navbar.php'; ?>
 
     <div class="contenedor">
         <h2 style="margin-bottom:20px">Propiedades disponibles</h2>
