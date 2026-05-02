@@ -60,15 +60,14 @@ if (isset($_SESSION['usuario'])) {
                 <div class="nav-item">
                     <span class="nav-trigger">Gestión</span>
                     <div class="dropdown">
+                        <a href="/renta-facil/modules/gestion/dashboard.php">📊 Dashboard</a>
                         <a href="/renta-facil/modules/gestion/panel.php">🏠 Propiedades</a>
                         <a href="/renta-facil/modules/gestion/usuarios.php">👥 Usuarios</a>
                         <a href="/renta-facil/modules/gestion/crear_contrato.php">📄 Contratos</a>
                     </div>
                 </div>
                 <div class="nav-item">
-                    <span class="nav-trigger">
-                        Mi cuenta
-                    </span>
+                    <span class="nav-trigger">Mi cuenta</span>
                     <div class="dropdown">
                         <a href="/renta-facil/modules/auth/perfil.php">👤 Mi perfil</a>
                         <a href="/renta-facil/modules/notificaciones/notificaciones.php">🔔 Notificaciones <?php if ($no_leidas > 0): ?><span class="notif-badge"><?= $no_leidas ?></span><?php endif; ?></a>
