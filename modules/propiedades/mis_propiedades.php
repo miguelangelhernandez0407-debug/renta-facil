@@ -9,6 +9,19 @@ if (!isset($_SESSION['usuario']) || $_SESSION['rol'] !== 'arrendador') {
 
 $id_usuario = $_SESSION['usuario'];
 
+if (isset($_GET['eliminar'])) {
+    $id = intval($_GET['eliminar']);
+    mysqli_query($conexion, "DELETE FROM pago_simulado WHERE id_contrato IN (SELECT id_contrato FROM contrato WHERE id_propiedad=$id)");
+    mysqli_query($conexion, "DELETE FROM contrato WHERE id_propiedad=$id");
+    mysqli_query($conexion, "DELETE FROM reporte_publicacion WHERE id_publicacion IN (SELECT id_publicacion FROM publicacion WHERE id_propiedad=$id)");
+    mysqli_query($conexion, "DELETE FROM publicacion WHERE id_propiedad=$id");
+    mysqli_query($conexion, "DELETE FROM historial_estado_propiedad WHERE id_propiedad=$id");
+    mysqli_query($conexion, "DELETE FROM verificacion_propiedad WHERE id_propiedad=$id");
+    mysqli_query($conexion, "DELETE FROM propiedad WHERE id_propiedad=$id");
+    header("Location: mis_propiedades.php?eliminado=1");
+    exit();
+}
+
 $propiedades = mysqli_query($conexion, "SELECT p.*, pub.precio_mensual, pub.descripcion, vp.estado as estado_verificacion
     FROM propiedad p
     INNER JOIN publicacion pub ON p.id_propiedad = pub.id_propiedad
@@ -31,6 +44,10 @@ $propiedades = mysqli_query($conexion, "SELECT p.*, pub.precio_mensual, pub.desc
             <a href="crear.php" class="btn btn-primary">+ Publicar nueva propiedad</a>
         </div>
 
+        <?php if (isset($_GET['eliminado'])): ?>
+            <div class="alerta exito">Propiedad eliminada correctamente.</div>
+        <?php endif; ?>
+
         <?php if (mysqli_num_rows($propiedades) === 0): ?>
             <div style="text-align:center;padding:40px;background:white;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.1)">
                 <p style="color:#666;margin-bottom:16px">No tienes propiedades publicadas aún.</p>
@@ -47,6 +64,7 @@ $propiedades = mysqli_query($conexion, "SELECT p.*, pub.precio_mensual, pub.desc
                         <th>Habitaciones</th>
                         <th>Area m2</th>
                         <th>Estado</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -66,6 +84,10 @@ $propiedades = mysqli_query($conexion, "SELECT p.*, pub.precio_mensual, pub.desc
                             <?php else: ?>
                                 <span class="badge pendiente">Pendiente</span>
                             <?php endif; ?>
+                        </td>
+                        <td>
+                            <a href="/renta-facil/modules/propiedades/editar.php?id=<?= $p['id_propiedad'] ?>" class="btn btn-primary">Editar</a>
+                            <a href="/renta-facil/modules/propiedades/mis_propiedades.php?eliminar=<?= $p['id_propiedad'] ?>" class="btn btn-danger" onclick="return confirm('¿Seguro que quieres eliminar esta propiedad?')">Eliminar</a>
                         </td>
                     </tr>
                     <?php endwhile; ?>
