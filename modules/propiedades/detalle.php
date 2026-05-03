@@ -30,6 +30,9 @@ if (!$propiedad) {
 }
 
 $es_favorito = mysqli_fetch_assoc(mysqli_query($conexion, "SELECT id_favorito FROM favorito WHERE id_usuario=$id_usuario AND id_propiedad=$id_propiedad"));
+$stats_resenas = mysqli_fetch_assoc(mysqli_query($conexion, "SELECT COUNT(*) as total, AVG(calificacion) as promedio FROM resena WHERE id_propiedad=$id_propiedad"));
+$total_resenas = $stats_resenas['total'];
+$promedio = round($stats_resenas['promedio'], 1);
 
 $iconos = ['casa'=>'🏠','apartamento'=>'🏢','habitacion'=>'🛏','local'=>'🏪'];
 $icono = $iconos[$propiedad['tipo_propiedad']] ?? '🏠';
@@ -43,20 +46,15 @@ $icono = $iconos[$propiedad['tipo_propiedad']] ?? '🏠';
     <style>
         .detalle-hero {
             background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
-            padding: 48px 32px;
-            color: white;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
+            padding: 48px 32px; color: white;
+            text-align: center; position: relative; overflow: hidden;
         }
         .detalle-hero .tipo-badge {
             display: inline-block;
             background: rgba(255,255,255,0.2);
             border: 1px solid rgba(255,255,255,0.3);
-            padding: 5px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            margin-bottom: 14px;
+            padding: 5px 16px; border-radius: 20px;
+            font-size: 13px; margin-bottom: 14px;
         }
         .detalle-hero h2 { font-size: 32px; font-weight: 700; margin-bottom: 8px; }
         .detalle-hero .ubicacion { font-size: 15px; opacity: 0.85; margin-bottom: 16px; }
@@ -89,13 +87,11 @@ $icono = $iconos[$propiedad['tipo_propiedad']] ?? '🏠';
             padding: 18px 24px; border-bottom: 1px solid #f0f4ff;
             font-size: 14px; font-weight: 700; color: #1a73e8;
             letter-spacing: 0.5px; text-transform: uppercase;
-            display: flex; align-items: center; gap: 8px;
+            display: flex; align-items: center; justify-content: space-between;
         }
         .detalle-card-body { padding: 24px; }
         .caract-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 12px;
+            display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px;
         }
         .caract-item {
             background: #f8f9ff; border: 1px solid #e8f0fe;
@@ -113,6 +109,14 @@ $icono = $iconos[$propiedad['tipo_propiedad']] ?? '🏠';
         }
         .contacto-item .c-key { font-size: 11px; color: #888; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
         .contacto-item .c-val { font-size: 14px; color: #1a1a2e; font-weight: 500; }
+        .resena-preview {
+            display: flex; align-items: center; gap: 12px;
+            background: #fff8e1; border-radius: 10px; padding: 14px 16px;
+            margin-bottom: 16px; border: 1px solid #ffe082;
+        }
+        .resena-preview .rp-num { font-size: 28px; font-weight: 800; color: #f57f17; }
+        .resena-preview .rp-stars { font-size: 18px; }
+        .resena-preview .rp-info { font-size: 13px; color: #888; }
         @media(max-width:600px) {
             .caract-grid { grid-template-columns: repeat(3, 1fr); }
             .contacto-grid { grid-template-columns: 1fr; }
@@ -139,6 +143,7 @@ $icono = $iconos[$propiedad['tipo_propiedad']] ?? '🏠';
     <div class="detalle-body">
         <a href="listar.php" class="btn btn-primary" style="margin-bottom:20px;display:inline-block">← Volver</a>
 
+        <!-- CARACTERÍSTICAS -->
         <div class="detalle-card">
             <div class="detalle-card-header">📐 Características</div>
             <div class="detalle-card-body">
@@ -172,6 +177,7 @@ $icono = $iconos[$propiedad['tipo_propiedad']] ?? '🏠';
             </div>
         </div>
 
+        <!-- DESCRIPCIÓN -->
         <div class="detalle-card">
             <div class="detalle-card-header">📝 Descripción</div>
             <div class="detalle-card-body">
@@ -179,6 +185,33 @@ $icono = $iconos[$propiedad['tipo_propiedad']] ?? '🏠';
             </div>
         </div>
 
+        <!-- RESEÑAS -->
+        <div class="detalle-card">
+            <div class="detalle-card-header">
+                ⭐ Reseñas
+                <a href="/renta-facil/modules/resenas/resenas.php?id=<?= $id_propiedad ?>" class="btn btn-warning" style="font-size:12px;padding:6px 14px">Ver todas →</a>
+            </div>
+            <div class="detalle-card-body">
+                <?php if ($total_resenas > 0): ?>
+                    <div class="resena-preview">
+                        <div class="rp-num"><?= $promedio ?></div>
+                        <div>
+                            <div class="rp-stars">
+                                <?php for ($i = 1; $i <= 5; $i++): ?>
+                                    <?= $i <= round($promedio) ? '⭐' : '☆' ?>
+                                <?php endfor; ?>
+                            </div>
+                            <div class="rp-info"><?= $total_resenas ?> reseña<?= $total_resenas !== 1 ? 's' : '' ?></div>
+                        </div>
+                    </div>
+                <?php else: ?>
+                    <p style="color:#888;font-size:14px;margin-bottom:12px">Esta propiedad aún no tiene reseñas.</p>
+                <?php endif; ?>
+                <a href="/renta-facil/modules/resenas/resenas.php?id=<?= $id_propiedad ?>" class="btn btn-warning">⭐ <?= $total_resenas > 0 ? 'Ver y escribir reseña' : 'Ser el primero en reseñar' ?></a>
+            </div>
+        </div>
+
+        <!-- CONTACTO -->
         <div class="detalle-card">
             <div class="detalle-card-header">📞 Contactar arrendador</div>
             <div class="detalle-card-body">
