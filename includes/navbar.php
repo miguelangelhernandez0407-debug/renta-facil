@@ -28,7 +28,7 @@ if (isset($_SESSION['usuario'])) {
     box-shadow: 0 8px 24px rgba(0,0,0,0.15);
     overflow: hidden; z-index: 999;
 }
-.nav-item:hover .dropdown, .nav-item:focus-within .dropdown { display: block; }
+.dropdown.open { display: block; }
 .dropdown a {
     display: flex; align-items: center; gap: 10px;
     padding: 11px 16px; color: #333; text-decoration: none;
@@ -47,6 +47,7 @@ if (isset($_SESSION['usuario'])) {
     color: white; font-size: 14px; font-weight: 500;
     padding: 8px 14px;
 }
+.nav-trigger.active { background: rgba(255,255,255,0.2); }
 </style>
 
 <nav class="navbar">
@@ -58,7 +59,7 @@ if (isset($_SESSION['usuario'])) {
 
             <?php if ($_SESSION['rol'] === 'administrador'): ?>
                 <div class="nav-item">
-                    <span class="nav-trigger">Gestión</span>
+                    <span class="nav-trigger" onclick="toggleMenu(this)">Gestión</span>
                     <div class="dropdown">
                         <a href="/renta-facil/modules/gestion/dashboard.php">📊 Dashboard</a>
                         <a href="/renta-facil/modules/gestion/panel.php">🏠 Propiedades</a>
@@ -67,7 +68,7 @@ if (isset($_SESSION['usuario'])) {
                     </div>
                 </div>
                 <div class="nav-item">
-                    <span class="nav-trigger">Mi cuenta</span>
+                    <span class="nav-trigger" onclick="toggleMenu(this)">Mi cuenta</span>
                     <div class="dropdown">
                         <a href="/renta-facil/modules/auth/perfil.php">👤 Mi perfil</a>
                         <a href="/renta-facil/modules/notificaciones/notificaciones.php">🔔 Notificaciones <?php if ($no_leidas > 0): ?><span class="notif-badge"><?= $no_leidas ?></span><?php endif; ?></a>
@@ -78,7 +79,7 @@ if (isset($_SESSION['usuario'])) {
 
             <?php elseif ($_SESSION['rol'] === 'arrendador'): ?>
                 <div class="nav-item">
-                    <span class="nav-trigger">Propiedades</span>
+                    <span class="nav-trigger" onclick="toggleMenu(this)">Propiedades</span>
                     <div class="dropdown">
                         <a href="/renta-facil/modules/propiedades/listar.php">🏘️ Inicio</a>
                         <a href="/renta-facil/modules/propiedades/mis_propiedades.php">📋 Mis propiedades</a>
@@ -87,13 +88,13 @@ if (isset($_SESSION['usuario'])) {
                     </div>
                 </div>
                 <div class="nav-item">
-                    <span class="nav-trigger">Buscar</span>
+                    <span class="nav-trigger" onclick="toggleMenu(this)">Buscar</span>
                     <div class="dropdown">
                         <a href="/renta-facil/modules/busqueda/buscar.php">🔎 Buscar propiedades</a>
                     </div>
                 </div>
                 <div class="nav-item">
-                    <span class="nav-trigger">Mi cuenta</span>
+                    <span class="nav-trigger" onclick="toggleMenu(this)">Mi cuenta</span>
                     <div class="dropdown">
                         <a href="/renta-facil/modules/auth/perfil.php">👤 Mi perfil</a>
                         <a href="/renta-facil/modules/notificaciones/notificaciones.php">🔔 Notificaciones <?php if ($no_leidas > 0): ?><span class="notif-badge"><?= $no_leidas ?></span><?php endif; ?></a>
@@ -104,14 +105,14 @@ if (isset($_SESSION['usuario'])) {
 
             <?php elseif ($_SESSION['rol'] === 'arrendatario'): ?>
                 <div class="nav-item">
-                    <span class="nav-trigger">Propiedades</span>
+                    <span class="nav-trigger" onclick="toggleMenu(this)">Propiedades</span>
                     <div class="dropdown">
                         <a href="/renta-facil/modules/propiedades/listar.php">🏘️ Inicio</a>
                         <a href="/renta-facil/modules/busqueda/buscar.php">🔎 Buscar</a>
                     </div>
                 </div>
                 <div class="nav-item">
-                    <span class="nav-trigger">Mi cuenta</span>
+                    <span class="nav-trigger" onclick="toggleMenu(this)">Mi cuenta</span>
                     <div class="dropdown">
                         <a href="/renta-facil/modules/arrendatarios/validar.php">📋 Validacion</a>
                         <a href="/renta-facil/modules/pagos/pagar.php">💳 Pagos</a>
@@ -129,3 +130,28 @@ if (isset($_SESSION['usuario'])) {
         <?php endif; ?>
     </div>
 </nav>
+
+<script>
+function toggleMenu(trigger) {
+    const dropdown = trigger.nextElementSibling;
+    const isOpen = dropdown.classList.contains('open');
+    
+    // Cerrar todos los dropdowns
+    document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('open'));
+    document.querySelectorAll('.nav-trigger').forEach(t => t.classList.remove('active'));
+    
+    // Abrir el clickeado si estaba cerrado
+    if (!isOpen) {
+        dropdown.classList.add('open');
+        trigger.classList.add('active');
+    }
+}
+
+// Cerrar al hacer clic fuera
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.nav-item')) {
+        document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('open'));
+        document.querySelectorAll('.nav-trigger').forEach(t => t.classList.remove('active'));
+    }
+});
+</script>
