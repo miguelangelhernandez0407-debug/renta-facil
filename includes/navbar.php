@@ -96,6 +96,7 @@ if (isset($_SESSION['usuario'])) {
                 <div class="nav-item">
                     <span class="nav-trigger" onclick="toggleMenu(this)">Mi cuenta</span>
                     <div class="dropdown">
+                        <a href="/renta-facil/modules/favoritos/favoritos.php">❤️ Favoritos</a>
                         <a href="/renta-facil/modules/auth/perfil.php">👤 Mi perfil</a>
                         <a href="/renta-facil/modules/notificaciones/notificaciones.php">🔔 Notificaciones <?php if ($no_leidas > 0): ?><span class="notif-badge"><?= $no_leidas ?></span><?php endif; ?></a>
                         <div class="divider"></div>
@@ -114,6 +115,7 @@ if (isset($_SESSION['usuario'])) {
                 <div class="nav-item">
                     <span class="nav-trigger" onclick="toggleMenu(this)">Mi cuenta</span>
                     <div class="dropdown">
+                        <a href="/renta-facil/modules/favoritos/favoritos.php">❤️ Favoritos</a>
                         <a href="/renta-facil/modules/arrendatarios/validar.php">📋 Validacion</a>
                         <a href="/renta-facil/modules/pagos/pagar.php">💳 Pagos</a>
                         <a href="/renta-facil/modules/seguridad/reportar.php">🚨 Reportar</a>
@@ -135,19 +137,13 @@ if (isset($_SESSION['usuario'])) {
 function toggleMenu(trigger) {
     const dropdown = trigger.nextElementSibling;
     const isOpen = dropdown.classList.contains('open');
-    
-    // Cerrar todos los dropdowns
     document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('open'));
     document.querySelectorAll('.nav-trigger').forEach(t => t.classList.remove('active'));
-    
-    // Abrir el clickeado si estaba cerrado
     if (!isOpen) {
         dropdown.classList.add('open');
         trigger.classList.add('active');
     }
 }
-
-// Cerrar al hacer clic fuera
 document.addEventListener('click', function(e) {
     if (!e.target.closest('.nav-item')) {
         document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('open'));

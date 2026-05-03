@@ -7,7 +7,10 @@ if (!isset($_SESSION['usuario'])) {
     exit();
 }
 
-$sql = "SELECT p.*, pub.precio_mensual, pub.descripcion 
+$id_usuario = $_SESSION['usuario'];
+
+$sql = "SELECT p.*, pub.precio_mensual, pub.descripcion,
+        (SELECT COUNT(*) FROM favorito WHERE id_usuario=$id_usuario AND id_propiedad=p.id_propiedad) as es_favorito
         FROM propiedad p 
         INNER JOIN publicacion pub ON p.id_propiedad = pub.id_propiedad
         WHERE p.id_propiedad IN (
@@ -49,13 +52,17 @@ $total = mysqli_num_rows($resultado);
             </div>
         <?php else: ?>
             <div class="grid-propiedades">
-                <?php while ($p = mysqli_fetch_assoc($resultado)): ?>
+                <?php
+                $iconos = ['casa'=>'🏠','apartamento'=>'🏢','habitacion'=>'🛏','local'=>'🏪'];
+                while ($p = mysqli_fetch_assoc($resultado)): ?>
                     <div class="tarjeta">
-                        <div style="background:linear-gradient(135deg,#e8f0fe,#f0f4ff);height:120px;display:flex;align-items:center;justify-content:center;font-size:48px">
-                            <?php
-                                $iconos = ['casa'=>'🏠','apartamento'=>'🏢','habitacion'=>'🛏','local'=>'🏪'];
-                                echo $iconos[$p['tipo_propiedad']] ?? '🏠';
-                            ?>
+                        <div style="background:linear-gradient(135deg,#e8f0fe,#f0f4ff);height:120px;display:flex;align-items:center;justify-content:center;font-size:48px;position:relative">
+                            <?= $iconos[$p['tipo_propiedad']] ?? '🏠' ?>
+                            <a href="/renta-facil/modules/favoritos/favoritos.php?toggle=<?= $p['id_propiedad'] ?>&redirect=/renta-facil/modules/propiedades/listar.php"
+                               style="position:absolute;top:10px;right:10px;font-size:22px;text-decoration:none;transition:transform 0.2s"
+                               title="<?= $p['es_favorito'] ? 'Quitar de favoritos' : 'Agregar a favoritos' ?>">
+                                <?= $p['es_favorito'] ? '❤️' : '🤍' ?>
+                            </a>
                         </div>
                         <div class="tarjeta-info">
                             <h3>
