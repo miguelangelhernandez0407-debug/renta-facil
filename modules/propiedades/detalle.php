@@ -16,7 +16,7 @@ if (!$id_propiedad) {
 }
 
 $propiedad = mysqli_fetch_assoc(mysqli_query($conexion, "SELECT p.*, pub.precio_mensual, pub.descripcion, pub.id_publicacion,
-    u.nombres, u.apellidos, u.correo, u.telefono
+    u.id_usuario as id_arrendador, u.nombres, u.apellidos, u.correo, u.telefono
     FROM propiedad p
     INNER JOIN publicacion pub ON p.id_propiedad = pub.id_propiedad
     INNER JOIN verificacion_propiedad vp ON p.id_propiedad = vp.id_propiedad
@@ -229,8 +229,13 @@ $icono = $iconos[$propiedad['tipo_propiedad']] ?? '🏠';
                         <div class="c-val"><?= $propiedad['correo'] ?></div>
                     </div>
                 </div>
-                <a href="mailto:<?= $propiedad['correo'] ?>" class="btn btn-success" style="margin-right:8px">✉️ Enviar correo</a>
-                <a href="tel:<?= $propiedad['telefono'] ?>" class="btn btn-primary">📞 Llamar</a>
+                <div style="display:flex;gap:10px;flex-wrap:wrap">
+                    <a href="mailto:<?= $propiedad['correo'] ?>" class="btn btn-success">✉️ Enviar correo</a>
+                    <a href="tel:<?= $propiedad['telefono'] ?>" class="btn btn-primary">📞 Llamar</a>
+                    <?php if ($_SESSION['rol'] === 'arrendatario' && $propiedad['id_arrendador'] != $id_usuario): ?>
+                        <a href="/renta-facil/modules/chat/chat.php?propiedad=<?= $id_propiedad ?>&usuario=<?= $propiedad['id_arrendador'] ?>" class="btn btn-warning">💬 Enviar mensaje</a>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
 
